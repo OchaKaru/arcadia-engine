@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
+
 using GLFW;
+using static GLFW.Glfw;
 
 namespace ArcadiaEngine.Graphics {
     class Camera {
@@ -8,13 +10,17 @@ namespace ArcadiaEngine.Graphics {
 
         private double _scroll_delta = 0;
 
-        public Camera(Vector2 initial_focus_position, float initial_zoom) {
+        private MouseCallback onScroll;
+
+    public Camera(Vector2 initial_focus_position, float initial_zoom) {
             focus_position = initial_focus_position;
             zoom = initial_zoom;
 
-            Glfw.SetScrollCallback(WindowManager.window, (Window, x, y) => {
+            onScroll = (Window, x, y) => {
                 _scroll_delta = y;
-            });
+            };
+
+            SetScrollCallback(WindowManager.window, onScroll);
         }
 
         public Matrix4x4 get_projection_matrix() {
