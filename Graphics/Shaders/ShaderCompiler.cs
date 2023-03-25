@@ -1,17 +1,23 @@
-﻿using ArcadiaEngine.Graphics.OpenGL;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Text;
+
+using OpenGL;
+using static OpenGL.Gl;
 
 namespace ArcadiaEngine.Graphics.Shaders {
     static class ShaderCompiler {
-        public static uint compile(string code, int shader_type) {
-            uint shader = GL.glCreateShader(shader_type);
+        private const int MAX_ERROR_LENGTH = 1000;
 
-            GL.glShaderSource(shader, code);
-            GL.glCompileShader(shader);
-            int[] status = GL.glGetShaderiv(shader, GL.GL_COMPILE_STATUS, 1);
-            if (status[0] == 0) {
+        public static uint compile(string code, ShaderType shader_type) {
+            uint shader = CreateShader(shader_type);
+
+            ShaderSource(shader, new string[] { code });
+            CompileShader(shader);
+            GetShader(shader, ShaderParameterName.CompileStatus, out int status);
+            if (status == 0) {
                 // failed to compile
-                string error = GL.glGetShaderInfoLog(shader);
+                StringBuilder error = new StringBuilder();
+                GetShaderInfoLog(shader, MAX_ERROR_LENGTH, out _, error);
                 Debug.WriteLine("ERROR COMPILING SHADER: " + error);
             }
             
@@ -19,17 +25,17 @@ namespace ArcadiaEngine.Graphics.Shaders {
         }
 
         public static uint link(params uint[] shaders) {
-            uint program = GL.glCreateProgram();
+            uint program = CreateProgram();
             
             foreach(uint shader in shaders) {
-                GL.glAttachShader(program, shader);
+                AttachShader(program, shader);
             }
 
-            GL.glLinkProgram(program);
+            LinkProgram(program);
 
             foreach (uint shader in shaders) {
-                GL.glDetachShader(program, shader);
-                GL.glDeleteShader(shader);
+                DetachShader(program, shader);
+                DeleteShader(shader);
             }
 
             return program;
