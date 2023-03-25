@@ -1,0 +1,13 @@
+{
+  "windowName": "Test",
+  "windowSize": {
+    "X": 800,
+    "Y": 600
+  },
+  "vSync": 0,
+
+  "vertexShaderFile": "C:\\Users\\Plutarco\\Documents\\Documents\\Projects\\arcadia-engine\\test-shaders\\sprite-renderer-vertex.glsl",
+  "fragmentShaderFile": "C:\\Users\\Plutarco\\Documents\\Documents\\Projects\\arcadia-engine\\test-shaders\\sprite-renderer-fragment.glsl",
+
+  "spriteInfoFile": "C:\\Users\\Plutarco\\Documents\\Documents\\Projects\\arcadia-engine\\sprite-info.json"
+}
