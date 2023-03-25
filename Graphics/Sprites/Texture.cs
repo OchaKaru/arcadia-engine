@@ -27,7 +27,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
 
         public unsafe Texture(string texture_path) : this(texture_path, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR) {}
 
-        public void set_active_and_bind(int index) {
+        public void bind(int index) {
             GL.glActiveTexture(GL.GL_TEXTURE0 + index);
             GL.glBindTexture(GL.GL_TEXTURE_2D, texture);
         }
