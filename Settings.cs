@@ -1,34 +1,39 @@
-﻿using System.Numerics;
-using System.IO;
+﻿using System.IO;
+
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using OpenTK.Mathematics;
 
 namespace ArcadiaEngine {
     static class Settings {
-        const string settings_file = @"C:\Users\Plutarco\Documents\Documents\Projects\arcadia-engine\settings.json";
+        const string settings_file = @"C:\Users\Plutarco\Documents\Documents\Projects\arcadia-engine-legacy\settings.json";
 
         public static string window_name { get; set; }
-        public static Vector2 window_size {get; set;}
-        public static int vsync { get; set; }
+        public static Vector2 window_size { get; set; }
 
-        public static string vertex_shader_file { get; set; }
-        public static string fragment_shader_file { get; set; }
+        public static int vsync { get; set; }
 
         public static string sprite_info_file { get; set; }
 
         public static void load() {
-            if (!File.Exists(settings_file))
+            if(File.Exists(settings_file) is not true)
                 throw new FileNotFoundException("ARCADIA ENGINE ERROR: Could not find settings.json file.");
-            JObject settings = JObject.Parse(File.ReadAllText(settings_file));
 
-            window_name = settings["windowName"].ToObject<string>();
-            window_size = new Vector2(settings["windowSize"]['X'].ToObject<float>(), settings["windowSize"]['Y'].ToObject<float>());
-            vsync = settings["vSync"].ToObject<int>();
+            JObject settings = JObject.Parse(File.ReadAllText(settings_file)) ?? throw new FileLoadException("ARCADIA ENGINE ERROR: Could not load the setting.json file.");
 
-            vertex_shader_file = settings["vertexShaderFile"].ToObject<string>();
-            fragment_shader_file = settings["fragmentShaderFile"].ToObject<string>();
+            if(settings["windowName"] is not null)
+                window_name = settings["windowName"].ToObject<string>() ?? "Arcadia Engine Game Window";
+            if(settings["windowSize"] is not null && settings["windowSize"]["X"] is not null && settings["windowSize"]["Y"] is not null)
+                window_size = new Vector2(settings["windowSize"]["X"].ToObject<float>(), settings["windowSize"]["Y"].ToObject<float>());
+            else
+                window_size = new Vector2(800, 600);
 
-            sprite_info_file = settings["spriteInfoFile"].ToObject<string>();
+            if(settings["vSync"] != null)
+                vsync = settings["vSync"].ToObject<int>();
+            else
+                vsync = 0;
+
+            if(settings["spriteInfoFile"] is not null)
+                sprite_info_file = settings["spriteInfoFile"].ToObject<string>() ?? "sprite-info.json";
         }
 
         public static void save() {
@@ -39,8 +44,6 @@ namespace ArcadiaEngine {
                     new JProperty("Y", window_size.Y)
                 )),
                 new JProperty("vSync", vsync),
-                new JProperty("vertexShaderFile", vertex_shader_file),
-                new JProperty("fragmentShaderFile", fragment_shader_file),
                 new JProperty("spriteInfoFile", sprite_info_file)
             );
 

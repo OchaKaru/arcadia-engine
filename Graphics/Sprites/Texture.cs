@@ -1,42 +1,53 @@
 ﻿using System.Drawing;
-using System.Numerics;
-using ArcadiaEngine.Graphics.OpenGL;
+using System.IO;
+using System.Runtime.Versioning;
+
+using OpenTK.Mathematics;
+using OpenTK.Graphics.OpenGL4;
+
+using ArcadiaEngine.Exceptions;
 
 namespace ArcadiaEngine.Graphics.Sprites {
     class Texture {
-        public uint texture { get; }
+        public int texture { get; }
         public Vector2 texture_size { get; }
 
-        public unsafe Texture(string texture_path, int wrap_x_param, int wrap_y_param, int min_filter, int mag_filter) {
-            Bitmap image = new Bitmap(texture_path);
+        [SupportedOSPlatform("windows")]
+        public Texture(string texture_path, TextureWrapMode wrap_x_param, TextureWrapMode wrap_y_param, TextureMinFilter min_filter, TextureMagFilter mag_filter) {
+            if(File.Exists(texture_path) is not true)
+                throw new FileNotFoundException("ARCADIA ENGINE ERROR: The image file specified could not be found.");
+
+            Bitmap image = new Bitmap(texture_path) ?? throw new ImageNotLoadedError("ARCADIA ENGINE ERROR: The texture image at the path specified could not be loaded.");
 
             texture_size = new Vector2(image.Width, image.Height);
 
             byte[] data = image_byte_data(image);
-
-            texture = GL.glGenTexture();
-            GL.glBindTexture(GL.GL_TEXTURE_2D, texture);
-            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, wrap_x_param);
-            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, wrap_y_param);
-            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, min_filter);
-            GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, mag_filter);
-            fixed (byte* d = &data[0])
-                GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, image.Width, image.Height, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, d);
-            GL.glGenerateMipmap(GL.GL_TEXTURE_2D);
+            
+            texture = GL.GenTexture();
+            GL.BindTexture(TextureTarget.TextureRectangle, texture);
+            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureWrapS, (int)wrap_x_param);
+            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureWrapT, (int)wrap_y_param);
+            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureMinFilter, (int)min_filter);
+            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureMagFilter, (int)mag_filter);
+            GL.TexImage2D(TextureTarget.TextureRectangle, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+            //GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            GL.BindTexture(TextureTarget.TextureRectangle, 0);
         }
 
-        public unsafe Texture(string texture_path) : this(texture_path, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR) {}
+        [SupportedOSPlatform("windows")]
+        public Texture(string texture_path) : this(texture_path, TextureWrapMode.Repeat, TextureWrapMode.Repeat, TextureMinFilter.Linear, TextureMagFilter.Linear) { }
 
         public void bind(int index) {
-            GL.glActiveTexture(GL.GL_TEXTURE0 + index);
-            GL.glBindTexture(GL.GL_TEXTURE_2D, texture);
+            GL.ActiveTexture(TextureUnit.Texture0 + index);
+            GL.BindTexture(TextureTarget.TextureRectangle, texture);
         }
 
+        [SupportedOSPlatform("windows")]
         public static byte[] image_byte_data(Bitmap img) {
             byte[] data = new byte[4 * (img.Width * img.Height)];
             int offset = 0;
-            for (int i = 0; i < img.Width; i++) {
-                for (int j = img.Height - 1; j >= 0; j--) {
+            for(int i = 0; i < img.Width; i++) {
+                for(int j = img.Height - 1; j >= 0; j--) {
                     Color pixel = img.GetPixel(i, j);
                     data[offset + 0] = pixel.R;
                     data[offset + 1] = pixel.G;

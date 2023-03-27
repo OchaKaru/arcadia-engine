@@ -1,41 +1,48 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.IO;
+using System.Diagnostics;
 
-using OpenGL;
-using static OpenGL.Gl;
+using OpenTK.Graphics.OpenGL4;
 
 namespace ArcadiaEngine.Graphics.Shaders {
     static class ShaderCompiler {
         private const int MAX_ERROR_LENGTH = 1000;
 
-        public static uint compile(string code, ShaderType shader_type) {
-            uint shader = CreateShader(shader_type);
+        private static string read_from_file(string shader_path) {
+            if(File.Exists(shader_path) is not true)
+                throw new FileNotFoundException("ARCADIA ENGINE ERROR: The shader file could not be found.");
+            string code = File.ReadAllText(shader_path) ?? throw new FileLoadException("ARCADIA ENGINE ERROR: The shader file could not be loaded.");
 
-            ShaderSource(shader, new string[] { code });
-            CompileShader(shader);
-            GetShader(shader, ShaderParameterName.CompileStatus, out int status);
-            if (status == 0) {
+            return code;
+        }
+
+        public static int compile(string shader_path, ShaderType shader_type) {
+            string code = read_from_file(shader_path);
+            int shader = GL.CreateShader(shader_type);
+
+            GL.ShaderSource(shader, code);
+            GL.CompileShader(shader);
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out int status);
+            if(status == 0) {
                 // failed to compile
-                StringBuilder error = new StringBuilder();
-                GetShaderInfoLog(shader, MAX_ERROR_LENGTH, out _, error);
+                GL.GetShaderInfoLog(shader, MAX_ERROR_LENGTH, out _, out string error);
                 Debug.WriteLine("ERROR COMPILING SHADER: " + error);
             }
-            
+
             return shader;
         }
 
-        public static uint link(params uint[] shaders) {
-            uint program = CreateProgram();
-            
-            foreach(uint shader in shaders) {
-                AttachShader(program, shader);
+        public static int link(params int[] shaders) {
+            int program = GL.CreateProgram();
+
+            foreach(int shader in shaders) {
+                GL.AttachShader(program, shader);
             }
 
-            LinkProgram(program);
+            GL.LinkProgram(program);
 
-            foreach (uint shader in shaders) {
-                DetachShader(program, shader);
-                DeleteShader(shader);
+            foreach(int shader in shaders) {
+                GL.DetachShader(program, shader);
+                GL.DeleteShader(shader);
             }
 
             return program;

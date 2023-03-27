@@ -1,28 +1,27 @@
-﻿using GLFW;
+﻿using OpenTK.Windowing.GraphicsLibraryFramework;
+
 using ArcadiaEngine.Graphics;
-// using ArcadiaEngine.Physics;
-// using ArcadiaEngine.Audio;
+using ArcadiaEngine.Physics;
 
 namespace ArcadiaEngine {
-    abstract class Engine {
+	abstract class Engine {
         public virtual void run() {
             Settings.load();
 
             WindowManager.initialize();
             Renderer.initialize();
             initialize();
-
             load();
 
-            while (!Glfw.WindowShouldClose(WindowManager.window)) {
+            while(!WindowManager.window_should_close()) {
                 Timer.tick();
                 update();
 
-                Glfw.PollEvents();
+                GLFW.PollEvents();
 
                 Renderer.clear_color();
                 draw();
-                Renderer.swap_buffers();
+                WindowManager.swap_buffers();
             }
 
             Settings.save();

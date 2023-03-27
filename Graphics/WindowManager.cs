@@ -1,63 +1,66 @@
-﻿using System.Numerics;
-using System.Drawing;
+﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
-using GLFW;
-using static GLFW.Glfw;
-using static OpenGL.Gl;
-
-using Hint = GLFW.Hint;
+using ArcadiaEngine.Exceptions;
 
 namespace ArcadiaEngine.Graphics {
-    static class WindowManager {
+    unsafe static class WindowManager {
         // Game display window
-        public static Window window { get; set; }
+        public static Window* window { get; set; }
+
         public static Vector2 window_size { get; set; }
 
-        // Debug simulation window
-        public static Window debug { get; set; }
-        public static Vector2 debug_size { get; set; }
-
         private static void initialize_window() {
-            //window_size.Add(title, new Vector2(width, height));
             window_size = Settings.window_size;
 
-            Init();
+            GLFW.Init();
 
             // using OpenGL 4.6 core profile
-            WindowHint(Hint.ContextVersionMajor, 4);
-            WindowHint(Hint.ContextVersionMinor, 6);
-            WindowHint(Hint.OpenglProfile, Profile.Core);
+            GLFW.WindowHint(WindowHintInt.ContextVersionMajor, 4);
+            GLFW.WindowHint(WindowHintInt.ContextVersionMinor, 6);
+            GLFW.WindowHint(WindowHintOpenGlProfile.OpenGlProfile, OpenGlProfile.Core);
 
             // focus the window and disable resize
-            WindowHint(Hint.Focused, true);
-            WindowHint(Hint.Resizable, false);
+            GLFW.WindowHint(WindowHintBool.Focused, true);
+            GLFW.WindowHint(WindowHintBool.Resizable, false);
 
-            window = CreateWindow((int)Settings.window_size.X, (int)Settings.window_size.Y, Settings.window_name, Monitor.None, Window.None);
-            if(window == Window.None) {
-                // somethign went wrong
-                return;
-            }
+            window = GLFW.CreateWindow((int)Settings.window_size.X, (int)Settings.window_size.Y, Settings.window_name, null, null);
+            if(window is null)
+                throw new WindowNotCreatedError();
 
             // center the window on the screen
-            Rectangle screen = Glfw.PrimaryMonitor.WorkArea;
-            int x = (screen.Width - (int)Settings.window_size.X) / 2;
-            int y = (screen.Height - (int)Settings.window_size.Y) / 2;
-            SetWindowPosition(window, x, y);
+            GLFW.GetMonitorWorkarea(GLFW.GetPrimaryMonitor(), out _, out _, out int working_area_width, out int working_area_height);
+            int x = (working_area_width - (int)Settings.window_size.X) / 2;
+            int y = (working_area_height - (int)Settings.window_size.Y) / 2;
+            GLFW.SetWindowPos(window, x, y);
 
-            Initialize();
-            MakeContextCurrent(window);
+            GLFW.MakeContextCurrent(window);
+            GL.LoadBindings(new GLFWBindingsContext());
 
-            Viewport(0, 0, (int)Settings.window_size.X, (int)Settings.window_size.Y);
+            //Viewport(0, 0, (int)Settings.window_size.X, (int)Settings.window_size.Y);
             // vsync
-            SwapInterval(Settings.vsync); // 0 is off, 1 is on
+            GLFW.SwapInterval(Settings.vsync); // 0 is off, 1 is on
         }
 
         public static void initialize() {
             initialize_window();
         }
 
-        public static Monitor get_current_monitor() {
-            return GetWindowMonitor(window);
+        public static bool window_should_close() {
+            return GLFW.WindowShouldClose(window);
+        }
+
+        public static void set_scroll_callback(GLFWCallbacks.ScrollCallback onScroll) {
+            GLFW.SetScrollCallback(window, onScroll);
+        }
+
+        public static void swap_buffers() {
+            GLFW.SwapBuffers(window);
+        }
+
+        public static Monitor* get_current_monitor() {
+            return GLFW.GetWindowMonitor(window);
         }
     }
 }
