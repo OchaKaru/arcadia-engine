@@ -24,14 +24,14 @@ namespace ArcadiaEngine.Graphics.Sprites {
             byte[] data = image_byte_data(image);
             
             texture = GL.GenTexture();
-            GL.BindTexture(TextureTarget.TextureRectangle, texture);
-            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureWrapS, (int)wrap_x_param);
-            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureWrapT, (int)wrap_y_param);
-            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureMinFilter, (int)min_filter);
-            GL.TexParameter(TextureTarget.TextureRectangle, TextureParameterName.TextureMagFilter, (int)mag_filter);
-            GL.TexImage2D(TextureTarget.TextureRectangle, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
-            //GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-            GL.BindTexture(TextureTarget.TextureRectangle, 0);
+            GL.BindTexture(TextureTarget.Texture2D, texture);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)wrap_x_param);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)wrap_y_param);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)min_filter);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)mag_filter);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
         [SupportedOSPlatform("windows")]
@@ -39,7 +39,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
 
         public void bind(int index) {
             GL.ActiveTexture(TextureUnit.Texture0 + index);
-            GL.BindTexture(TextureTarget.TextureRectangle, texture);
+            GL.BindTexture(TextureTarget.Texture2D, texture);
         }
 
         [SupportedOSPlatform("windows")]
