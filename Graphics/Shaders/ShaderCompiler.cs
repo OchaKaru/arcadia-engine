@@ -1,7 +1,8 @@
 ﻿using System.IO;
-using System.Diagnostics;
 
 using OpenTK.Graphics.OpenGL4;
+
+using ArcadiaEngine.Common.Exceptions;
 
 namespace ArcadiaEngine.Graphics.Shaders {
     static class ShaderCompiler {
@@ -25,7 +26,7 @@ namespace ArcadiaEngine.Graphics.Shaders {
             if(status == 0) {
                 // failed to compile
                 GL.GetShaderInfoLog(shader, MAX_ERROR_LENGTH, out _, out string error);
-                Debug.WriteLine("ERROR COMPILING SHADER: " + error);
+                throw new ShaderCompileError("ERROR COMPILING SHADER: " + error);
             }
 
             return shader;
