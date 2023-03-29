@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 
-using ArcadiaEngine.Exceptions;
+using ArcadiaEngine.Common.Exceptions;
 
 namespace ArcadiaEngine.Graphics.Sprites {
     class Texture {
@@ -14,13 +14,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
         public Vector2 texture_size { get; }
 
         public Texture(string texture_path, TextureWrapMode wrap_x_param, TextureWrapMode wrap_y_param, TextureMinFilter min_filter, TextureMagFilter mag_filter) {
-            if(File.Exists(texture_path) is not true)
-                throw new FileNotFoundException("ARCADIA ENGINE ERROR: The image file specified could not be found.");
-            Image<Rgba32> image = Image.Load<Rgba32>(texture_path) ?? throw new ImageNotLoadedError("ARCADIA ENGINE ERROR: The texture image at the path specified could not be loaded.");
-
-            texture_size = new Vector2(image.Width, image.Height);
-
-            byte[] data = image_byte_data(image);
+            (byte[] data, texture_size) = image_data(texture_path);
             
             texture = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, texture);
@@ -28,7 +22,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)wrap_y_param);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)min_filter);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)mag_filter);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, (int)texture_size.X, (int)texture_size.Y, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
@@ -40,12 +34,19 @@ namespace ArcadiaEngine.Graphics.Sprites {
             GL.BindTexture(TextureTarget.Texture2D, texture);
         }
 
-        public static byte[] image_byte_data(Image<Rgba32> img) {
-            byte[] data = new byte[Unsafe.SizeOf<Rgba32>() * (img.Width * img.Height)];
-            
-            img.CopyPixelDataTo(data);
+        public void bind() {
+            GL.BindTexture(TextureTarget.Texture2D, texture);
+        }
 
-            return data;
+        public static (byte[], Vector2) image_data(string texture_path) {
+            if(File.Exists(texture_path) is not true)
+                throw new FileNotFoundException("ARCADIA ENGINE ERROR: The image file specified could not be found.");
+            Image<Rgba32> image = Image.Load<Rgba32>(texture_path) ?? throw new ImageNotLoadedError("ARCADIA ENGINE ERROR: The texture image at the path specified could not be loaded.");
+
+            byte[] data = new byte[Unsafe.SizeOf<Rgba32>() * (image.Width * image.Height)];
+            image.CopyPixelDataTo(data);
+
+            return (data, new Vector2(image.Width, image.Height));
         }
     }
 }
