@@ -2,9 +2,11 @@
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-using ArcadiaEngine.Exceptions;
+using ArcadiaEngine.Common;
+using ArcadiaEngine.Common.Exceptions;
 
-namespace ArcadiaEngine.Graphics {
+namespace ArcadiaEngine.Graphics
+{
     unsafe static class WindowManager {
         // Game display window
         public static Window* window { get; set; }
