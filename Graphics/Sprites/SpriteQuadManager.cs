@@ -6,7 +6,7 @@ using OpenTK.Mathematics;
 using ArcadiaEngine.Common.Exceptions;
 
 namespace ArcadiaEngine.Graphics.Sprites {
-    class SpriteQuadArray {
+    class SpriteQuadManager {
         private const int NUMBER_OF_VERTICES = 6;
 
         public int vertex_array { get; set; }
@@ -16,7 +16,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
 
         public int maximum_quads { get; }
 
-        public SpriteQuadArray(int max_quads) {
+        public SpriteQuadManager(int max_quads) {
             maximum_quads = max_quads;
 
             vertex_array = GL.GenVertexArray();
@@ -45,7 +45,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
             GL.BindBuffer(BufferTarget.ArrayBuffer, quad_id_buffer);
             GL.BufferData(BufferTarget.ArrayBuffer, quad_ids.Length * sizeof(int), quad_ids, BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 1, VertexAttribPointerType.Int, false, sizeof(int), 0);
+            GL.VertexAttribPointer(0, 1, VertexAttribPointerType.Float, false, sizeof(int), 0);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);

@@ -2,11 +2,11 @@
 
 namespace ArcadiaEngine.Graphics.Sprites {
     struct SpriteInfo {
-        Matrix4 sprite_model;
-        Vector4 sprite_color;
+        public Matrix4 sprite_model;
+        public Vector4 sprite_color;
 
-        Vector2 sprite_sheet_coords;
-        Vector2 sprite_sheet_dimensions;
+        public Vector2 sprite_sheet_coords;
+        public Vector2 sprite_sheet_dimensions;
 
         public SpriteInfo(Matrix4 model, Vector4 color, Vector2 coords_on_sheet, Vector2 dimensions) {
             sprite_model = model;

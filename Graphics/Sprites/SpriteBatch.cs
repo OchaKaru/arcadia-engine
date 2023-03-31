@@ -7,14 +7,14 @@ using OpenTK.Graphics.OpenGL4;
 namespace ArcadiaEngine.Graphics.Sprites {
     class SpriteBatch {
         public Texture sprite_sheet { get; set; }
-        public SpriteQuadArray quads { get; set; }
+        public SpriteQuadManager quads { get; set; }
 
         public int sprite_info_buffer { get; set; }
         private List<SpriteInfo> sprites;
 
         public SpriteBatch(string sprite_sheet_path) {
             sprite_sheet = new Texture(sprite_sheet_path);
-            quads = new SpriteQuadArray(100);
+            quads = new SpriteQuadManager(100);
 
             sprite_info_buffer = GL.GenBuffer();
             sprites = new List<SpriteInfo>();
@@ -27,7 +27,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
 
         private void bind_sprite_info() {
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, sprite_info_buffer);
-            GL.BufferData(BufferTarget.ShaderStorageBuffer, sprites.Count * Unsafe.SizeOf<SpriteInfo>(), sprites.ToArray(), BufferUsageHint.DynamicRead);
+            GL.BufferData(BufferTarget.ShaderStorageBuffer, sprites.Count * Unsafe.SizeOf<SpriteInfo>(), sprites.ToArray(), BufferUsageHint.DynamicDraw);
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
             GL.BindBufferBase(BufferRangeTarget.ShaderStorageBuffer, 2, sprite_info_buffer);
         }

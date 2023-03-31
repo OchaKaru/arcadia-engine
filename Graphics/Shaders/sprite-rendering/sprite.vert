@@ -12,7 +12,7 @@ struct spriteInfo {
 	vec2 sheetCoords;
 	vec2 sheetDim;
 };
-layout(std430, binding = 2) buffer sprite_info_buffer {
+layout(binding = 2) buffer sprite_info_buffer {
 	spriteInfo sprites[];
 };
 
