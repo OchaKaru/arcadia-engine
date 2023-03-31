@@ -43,7 +43,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
                     quad_ids[i * NUMBER_OF_VERTICES + j] = i;
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, quad_id_buffer);
-            GL.BufferData(BufferTarget.ArrayBuffer, sizeof(int) * quad_ids.Length, quad_ids, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, quad_ids.Length * sizeof(int), quad_ids, BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 1, VertexAttribPointerType.Int, false, sizeof(int), 0);
 
