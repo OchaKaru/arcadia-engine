@@ -10,7 +10,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
         public SpriteQuadManager quads { get; set; }
 
         public int sprite_info_buffer { get; set; }
-        private List<SpriteInfo> sprites;
+        public  List<SpriteInfo> sprites { get; }
 
         public SpriteBatch(string sprite_sheet_path) {
             sprite_sheet = new Texture(sprite_sheet_path);
