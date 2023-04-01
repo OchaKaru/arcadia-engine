@@ -18,7 +18,7 @@ namespace ArcadiaEngine.Graphics {
 
         public static Camera camera { get; set; }
         public static Shader shader { get; set; }
-        public static SpriteBatch batch_list {  get; set; }
+        public static Dictionary<string, SpriteBatch> batch_list {  get; set; }
 
         public static void initialize() {
             GL.Enable(EnableCap.Blend);
@@ -33,7 +33,7 @@ namespace ArcadiaEngine.Graphics {
                 @"C:\Users\Plutarco\Documents\Documents\Projects\arcadia-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.frag"
             );
 
-            batch_list = new SpriteBatch(@"C:\Users\Plutarco\Documents\Documents\Projects\arcadia-engine-legacy\test-assets\cat-man.png");
+            batch_list = SpriteLoader.load_sprites();
         }
 
         public static void clear_color() {
@@ -74,12 +74,6 @@ namespace ArcadiaEngine.Graphics {
                     model2,
                     new Vector4(1, 1, 1, 1),
                     new Vector2((current_frame + 1) % 3, 0),
-                    new Vector2(3, 1)
-                ),
-                new SpriteInfo(
-                    model2,
-                    new Vector4(1, 1, 1, 1),
-                    new Vector2((current_frame + 2) % 3, 0),
                     new Vector2(3, 1)
                 )
             );
