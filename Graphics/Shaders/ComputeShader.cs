@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 
 namespace ArcadiaEngine.Graphics.Shaders {
-    internal class ComputeShader : Shader {
+    public class ComputeShader : Shader {
         public ComputeShader(params string[] shader_paths) {
             int[] shaders = new int[shader_paths.Length];
 

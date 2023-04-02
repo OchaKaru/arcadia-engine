@@ -2,7 +2,7 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace ArcadiaEngine.Graphics {
-    class Camera {
+    public class Camera {
         public Vector2 focus_position { get; set; }
         public float zoom { get; set; }
 

@@ -5,7 +5,7 @@ using ArcadiaEngine.Graphics;
 using ArcadiaEngine.Physics;
 
 namespace ArcadiaEngine {
-    abstract class Engine {
+    public abstract class Engine {
         public virtual void run() {
             Settings.load();
 

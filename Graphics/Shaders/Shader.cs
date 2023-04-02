@@ -2,7 +2,7 @@
 using OpenTK.Graphics.OpenGL4;
 
 namespace ArcadiaEngine.Graphics.Shaders {
-    abstract class Shader {
+    public abstract class Shader {
         public int program { get; set; }
 
         public void use() {

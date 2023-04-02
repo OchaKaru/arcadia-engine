@@ -5,7 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using ArcadiaEngine.Common.Exceptions;
 
 namespace ArcadiaEngine.Graphics.Shaders {
-    static class ShaderCompiler {
+    internal static class ShaderCompiler {
         private const int MAX_ERROR_LENGTH = 1000;
 
         private static string read_from_file(string shader_path) {
