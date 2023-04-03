@@ -10,18 +10,23 @@ namespace ArcadiaEngine {
             Settings.load();
 
             WindowManager.initialize();
-            Renderer.initialize();
+            GraphicsEngine.initialize();
             initialize();
+
             load();
 
             while(!WindowManager.window_should_close()) {
                 Timer.tick();
+
                 update();
+                GraphicsEngine.update_camera();
 
                 GLFW.PollEvents();
 
-                Renderer.clear_color();
+                GraphicsEngine.clear_color();
                 draw();
+                GraphicsEngine.render();
+
                 WindowManager.swap_buffers();
             }
 

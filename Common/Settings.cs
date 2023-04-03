@@ -6,13 +6,17 @@ using Newtonsoft.Json.Linq;
 using OpenTK.Mathematics;
 
 namespace ArcadiaEngine.Common {
-    static class Settings {
+    internal static class Settings {
         private static string settings_file = @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\test-game\settings.json";
 
         public static string window_name { get; set; }
         public static Vector2 window_size { get; set; }
-
         public static int vsync { get; set; }
+        public static Vector4 default_background_color { get; set; }
+
+        public static bool enable_camera_zoom { get; set; }
+        public static bool enable_camera_follow { get; set; }
+
 
         public static string sprite_info_file { get; set; }
 
@@ -28,14 +32,32 @@ namespace ArcadiaEngine.Common {
                 window_size = new Vector2(settings["windowSize"]["X"].ToObject<float>(), settings["windowSize"]["Y"].ToObject<float>());
             else
                 window_size = new Vector2(800, 600);
-
             if(settings["vSync"] != null)
                 vsync = settings["vSync"].ToObject<int>();
             else
                 vsync = 0;
+            if(settings["defaultBackgroundColor"] is not null)
+                default_background_color = new Vector4(
+                    settings["defaultBackgroundColor"][0].ToObject<float>(),
+                    settings["defaultBackgroundColor"][1].ToObject<float>(),
+                    settings["defaultBackgroundColor"][2].ToObject<float>(),
+                    settings["defaultBackgroundColor"][3].ToObject<float>()
+                );
+            else
+                default_background_color = new Vector4(0);
+
+            if(settings["enableCameraZoom"] is not null)
+                enable_camera_zoom = settings["enableCameraZoom"].ToObject<bool>();
+            else
+                enable_camera_zoom = false;
+            if(settings["enableCameraFollow"] is not null)
+                enable_camera_follow = settings["enableCameraFollow"].ToObject<bool>();
+            else
+                enable_camera_follow = false;
+
 
             if(settings["spriteInfoFile"] is not null)
-                sprite_info_file = settings["spriteInfoFile"].ToObject<string>() ?? "sprite-info.json";
+            sprite_info_file = settings["spriteInfoFile"].ToObject<string>() ?? "sprite-info.json";
         }
 
         public static void save() {
