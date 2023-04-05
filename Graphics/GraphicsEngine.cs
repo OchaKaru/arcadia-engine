@@ -33,8 +33,8 @@ namespace ArcadiaEngine.Graphics {
             camera_follow_enabled = Settings.enable_camera_follow ? true : false;
 
             shader = new DisplayShader(
-                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.vert",
-                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.frag"
+                "./Shaders/sprite-rendering/sprite.vert",
+                "./Shaders/sprite-rendering/sprite.frag"
             );
 
             batch_list = SpriteLoader.load_sprites();
