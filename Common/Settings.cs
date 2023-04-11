@@ -7,8 +7,7 @@ using OpenTK.Mathematics;
 
 namespace ArcadiaEngine.Common {
     internal static class Settings {
-        private static string settings_file = @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\test-game\settings.json";
-
+        private static string settings_file = @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\test-game\engine_settings.json";
         public static string window_name { get; set; }
         public static Vector2 window_size { get; set; }
         public static int vsync { get; set; }
@@ -17,10 +16,19 @@ namespace ArcadiaEngine.Common {
         public static bool enable_camera_zoom { get; set; }
         public static bool enable_camera_follow { get; set; }
 
-
         public static string sprite_info_file { get; set; }
 
         public static void load() {
+            //int attempt = 0;
+            //string base_directory = "./";
+
+            //while(attempt < 3) {
+            //    settings_file = Directory.GetFiles(base_directory, "engine_settings.json")[0];
+            //    base_directory += "../";
+            //}
+
+            //Console.WriteLine(settings_file);
+
             if(File.Exists(settings_file) is not true)
                 throw new FileNotFoundException("ARCADIA ENGINE ERROR: Could not find settings.json file.");
 
@@ -68,7 +76,9 @@ namespace ArcadiaEngine.Common {
                     new JProperty("Y", window_size.Y)
                 )),
                 new JProperty("vSync", vsync),
-                new JProperty("spriteInfoFile", sprite_info_file)
+                new JProperty("spriteInfoFile", sprite_info_file),
+                new JProperty("enableCameraZoom", enable_camera_zoom),
+                new JProperty("enableCameraFollow", enable_camera_follow)
             );
 
             File.WriteAllText(settings_file, settings.ToString());
