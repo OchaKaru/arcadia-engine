@@ -8,6 +8,8 @@ I plan on using this game engine to create some evolution simulations and games 
 ## Inspiration and References
 I wanted to make a game engine for a while because I love the idea of coding everything in a project from scratch, with some exceptions... I'm not crazy. This game engine's design is inspired by Ian Parberry's LARC engine since I learned game programming on that engine. I followed some of danc's videos to get started on putting the pieces together. I had a behemoth in front of me and I used those tutorials to split up the load.
 
+The animator I made was partly inspired by [aarthificial](https://www.youtube.com/@aarthificial)'s video on his solution to Unity's animator. It is a resolution tree that essentially picks the next frame based on the current state of the animator. I'm going to be playing around with my solution to my animation problem to make a more versatile animator, but his video on the subject was a good start.
+
 ## Installing and Running the Project
 The project was built in Visual Studios, so using NuGet to grab the OpenTK 4, NewtonSoft.JSON, and SixLabors.ImageSharp packages. This project runs on .NET 6, but I'm sure it could be updated to any other .NET core version in the future with some effort.
 
