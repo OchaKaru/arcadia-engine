@@ -17,7 +17,7 @@ namespace ArcadiaEngine.Graphics.Sprites {
                 Matrix4.CreateRotationZ(entity.entity_rotation) *
                 Matrix4.CreateTranslation(entity.entity_position.X, entity.entity_position.Y, 0),
                 entity.entity_color,
-                entity.draw_layer,
+                //entity.draw_layer,
                 sprite_coordinate,
                 sprite_sheet_dimensions
             );

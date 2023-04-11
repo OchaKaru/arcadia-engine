@@ -33,8 +33,8 @@ namespace ArcadiaEngine.Graphics {
             camera_follow_enabled = Settings.enable_camera_follow ? true : false;
 
             shader = new DisplayShader(
-                "./Shaders/sprite-rendering/sprite.vert",
-                "./Shaders/sprite-rendering/sprite.frag"
+                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.vert",
+                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.frag"
             );
 
             batch_list = SpriteLoader.load_sprites();
@@ -51,10 +51,11 @@ namespace ArcadiaEngine.Graphics {
             if(camera_zoom_enabled)
                 camera.update_zoom();
                 
-            if(camera_follow_enabled && entity_to_follow is not null)
-                camera.focus_position = entity_to_follow.entity_position;
-            else
-                throw new FollowEntityNotSetError("ARCADIA ENGINE ERROR: The entity to follow was not set before updating the camera.");
+            if(camera_follow_enabled)
+                if(camera_follow_enabled)
+                    camera.focus_position = entity_to_follow.entity_position;
+                else
+                    throw new FollowEntityNotSetError("ARCADIA ENGINE ERROR: The entity to follow was not set before updating the camera.");
 
         }
 
