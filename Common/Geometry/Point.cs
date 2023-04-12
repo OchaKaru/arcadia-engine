@@ -1,10 +1,19 @@
-﻿using OpenTK.Audio.OpenAL;
+﻿using System;
+
 using OpenTK.Mathematics;
-using System;
 
 namespace ArcadiaEngine.Common.Geometry {
     public class Point {
-        public Vector2 point_position;
+        public Vector2 point_position { private get; set; }
+        public float X { get { return point_position.X; } }
+        public float Y { get { return point_position.Y; } }
+
+        public Point(float x, float y) {
+            point_position = new Vector2(x, y);
+        }
+        public Point(Vector2 position) {
+            point_position = position;
+        }
 
         public void draw() {
 
@@ -22,6 +31,13 @@ namespace ArcadiaEngine.Common.Geometry {
         }
         public static float distance_between(Vector2 p1, Vector2 p2) {
             return MathF.Sqrt(MathF.Pow(p2.X - p1.X, 2) + MathF.Pow(p2.Y - p1.Y, 2));
+        }
+
+        public static implicit operator Vector2(Point p) {
+            return p.point_position;
+        }
+        public static implicit operator Point(Vector2 point) {
+            return new Point(point);
         }
     }
 }

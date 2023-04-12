@@ -1,22 +1,29 @@
 ﻿using OpenTK.Mathematics;
 
 namespace ArcadiaEngine.Common.Geometry {
-    public class Circle {
-        Vector2 circle_center;
-        Vector2 circle_radius;
+    public class Circle : Shape{
+        public Vector2 circle_center;
+        public float circle_radius;
 
-        public Circle(Vector2 center, Vector2 radius) {
+        public Circle(Vector2 center, float radius) {
             circle_center = center;
             circle_radius = radius;
         }
 
-        public bool intersects(Rectangle other) {
-            
-        }
-        public bool intersects(Triangle other) {
+        public void draw_fill() {
 
         }
+        public void draw_border() {
+
+        }
+
         public bool intersects(Circle other) {
+
+        }
+        public bool intersects(Rectangle other) {
+            return other.intersects(this);
+        }
+        public bool intersects(Triangle other) {
 
         }
 
