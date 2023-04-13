@@ -32,7 +32,7 @@ namespace ArcadiaEngine.Common.Geometry {
                 rectangle_position.Y + rectangle_size.Y > other.rectangle_position.Y;
         }
         public bool intersects(Triangle other) {
-            
+            return other.intersects(this);
         }
         public bool intersects(Circle other) {
             if(contains(other.circle_center))

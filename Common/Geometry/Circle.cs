@@ -18,17 +18,27 @@ namespace ArcadiaEngine.Common.Geometry {
         }
 
         public bool intersects(Circle other) {
-
+            if(Point.distance_between(circle_center, other.circle_center) < circle_radius + other.circle_radius)
+                return true;
+            return false;
         }
         public bool intersects(Rectangle other) {
             return other.intersects(this);
         }
         public bool intersects(Triangle other) {
-
+            if(other.contains(circle_center) || contains(other.triangle_center))
+                return true;
+            else if(contains(other.triangle_vertices[0]) || contains(other.triangle_vertices[1]) || contains(other.triangle_vertices[2]))
+                return true;
+            else if(other.closest_edge_point(circle_center).distance_to(circle_center) < circle_radius)
+                return true;
+            return false;
         }
 
         public bool contains(Point p) {
-            
+            if(p.distance_to(circle_center) < circle_radius)
+                return true;
+            return false;
         }
 
     }
