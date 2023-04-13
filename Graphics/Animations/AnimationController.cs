@@ -15,9 +15,6 @@ namespace ArcadiaEngine.Graphics.Animations {
                 return 0;
 
             int controller_value = current.get_controller_value(controller_name) % size;
-
-            Console.WriteLine(controller_name + ": " + controller_value);
-
             next.set_controller_value(controller_name, (controller_value + 1) % size);
 
             return controller_value;
