@@ -2,8 +2,6 @@
 
 using ArcadiaEngine.Graphics;
 using ArcadiaEngine.Graphics.Sprites;
-using ArcadiaEngine.Physics;
-using System;
 
 namespace ArcadiaEngine.Common {
     public abstract class Entity {
