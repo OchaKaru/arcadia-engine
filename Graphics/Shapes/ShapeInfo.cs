@@ -6,9 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArcadiaEngine.Graphics.Shapes {
-    internal class ShapeInfo {
+    internal struct ShapeInfo {
         Vector2[] positions;
         float size;
+        Vector2 scale;
+        Vector4 color;
+
         ShapeType shape;
     }
 }

@@ -6,9 +6,11 @@ using OpenTK.Graphics.OpenGL4;
 using ArcadiaEngine.Common;
 using ArcadiaEngine.Common.Exceptions;
 using ArcadiaEngine.Graphics.Shaders;
-using ArcadiaEngine.Graphics.Sprites;
+using ArcadiaEngine.Graphics.Shapes;
+using ArcadiaEngine.Graphics.Sprites.Rendering;
 
-namespace ArcadiaEngine.Graphics {
+namespace ArcadiaEngine.Graphics
+{
     internal class GraphicsEngine {
         private static Vector4 background_color;
 
@@ -18,8 +20,11 @@ namespace ArcadiaEngine.Graphics {
 
         private static Entity? entity_to_follow;
 
-        private static Shader? shader;
-        private static Dictionary<string, SpriteBatch>? batch_list;
+        private static Shader? sprite_shader;
+        private static Dictionary<string, SpriteRenderer>? sprite_renderer_list;
+
+        private static Shader? shape_shader;
+        private static Dictionary<ShapeType, ShapeRenderer>? shape_renderer_list;
 
         public static void initialize() {
             GL.Enable(EnableCap.Blend);
@@ -32,12 +37,21 @@ namespace ArcadiaEngine.Graphics {
             camera_zoom_enabled = Settings.enable_camera_zoom ? true : false;
             camera_follow_enabled = Settings.enable_camera_follow ? true : false;
 
-            shader = new DisplayShader(
+            sprite_shader = new DisplayShader(
                 @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.vert",
                 @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.frag"
             );
+            sprite_renderer_list = SpriteLoader.load_sprites();
 
-            batch_list = SpriteLoader.load_sprites();
+            shape_shader = new DisplayShader(
+                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\sprite.vert",
+                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\sprite.frag"
+            );
+            shape_renderer_list = new Dictionary<ShapeType, ShapeRenderer> {
+                {ShapeType.Rectangle, new ShapeRenderer(ShapeType.Rectangle)},
+                {ShapeType.Triangle, new ShapeRenderer(ShapeType.Triangle)},
+                {ShapeType.Circle, new ShapeRenderer(ShapeType.Circle)}
+            };
 
             if(camera_zoom_enabled)
                 camera.enable_zoom_on_scroll();
@@ -65,18 +79,25 @@ namespace ArcadiaEngine.Graphics {
         }
 
         public static void draw(string sprite_sheet, params SpriteInfo[] sprites) {
-            batch_list[sprite_sheet].add_sprite(sprites);
+            sprite_renderer_list[sprite_sheet].add_sprite(sprites);
+        }
+        public static void draw(ShapeType type, bool filled, params ShapeInfo[] shapes) {
+            shape_renderer_list[type].add_shape(filled, shapes);
         }
 
         public static void render() {
-            shader.use();
-            
-            shader.set_uniform("sprite_sheet", 0);
-            shader.set_matrix("projection", camera.get_projection_matrix());
+            sprite_shader.use();
 
-            foreach(SpriteBatch batch in batch_list.Values)
-                if(batch.sprites.Count > 0)
-                    batch.draw();
+            sprite_shader.set_uniform("sprite_sheet", 0);
+            sprite_shader.set_matrix("projection", camera.get_projection_matrix());
+
+            foreach(SpriteRenderer sprite_renderer in sprite_renderer_list.Values)
+                if(sprite_renderer.sprites.Count > 0)
+                    sprite_renderer.draw();
+
+            foreach(ShapeRenderer shape_renderer in shape_renderer_list.Values)
+                if(shape_renderer.count > 0)
+                    shape_renderer.draw();
         }
     }
 }
