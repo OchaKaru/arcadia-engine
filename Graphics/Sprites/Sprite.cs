@@ -1,8 +1,10 @@
 ﻿using OpenTK.Mathematics;
 
 using ArcadiaEngine.Common;
+using ArcadiaEngine.Graphics.Sprites.Rendering;
 
-namespace ArcadiaEngine.Graphics.Sprites {
+namespace ArcadiaEngine.Graphics.Sprites
+{
     public class Sprite : SpriteAtlas {
         public Vector2 sprite_coordinate { get; set; }
 

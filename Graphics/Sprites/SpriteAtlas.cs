@@ -1,8 +1,10 @@
 ﻿using OpenTK.Mathematics;
 
 using ArcadiaEngine.Common;
+using ArcadiaEngine.Graphics.Sprites.Rendering;
 
-namespace ArcadiaEngine.Graphics.Sprites {
+namespace ArcadiaEngine.Graphics.Sprites
+{
     public abstract class SpriteAtlas {
         internal string sprite_sheet_name { get; set; }
         protected Vector2 sprite_size;

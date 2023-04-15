@@ -7,6 +7,7 @@ using ArcadiaEngine.Common;
 using ArcadiaEngine.Graphics.Sprites;
 using ArcadiaEngine.Graphics.Animations.Nodes;
 using ArcadiaEngine.Physics;
+using ArcadiaEngine.Graphics.Sprites.Rendering;
 
 namespace ArcadiaEngine.Graphics.Animations {
     using ControllerDictionary = Dictionary<string, int>;
