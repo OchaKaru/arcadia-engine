@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ArcadiaEngine.Graphics.Shapes {
     internal enum ShapeType {
-        Circle,
-        Rectangle,
-        Triangle
+        CircleFill, CircleLine,
+        RectangleFill, RectangleLine,
+        TriangleFill, TriangleLine
     }
 }

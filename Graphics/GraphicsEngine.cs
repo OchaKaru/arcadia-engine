@@ -24,7 +24,7 @@ namespace ArcadiaEngine.Graphics
         private static Dictionary<string, SpriteRenderer>? sprite_renderer_list;
 
         private static Shader? shape_shader;
-        private static Dictionary<ShapeType, ShapeRenderer>? shape_renderer_list;
+        private static ShapeRenderer? shape_renderer;
 
         public static void initialize() {
             GL.Enable(EnableCap.Blend);
@@ -44,14 +44,10 @@ namespace ArcadiaEngine.Graphics
             sprite_renderer_list = SpriteLoader.load_sprites();
 
             shape_shader = new DisplayShader(
-                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\sprite.vert",
-                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\sprite.frag"
+                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\shape.vert",
+                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\shape.frag"
             );
-            shape_renderer_list = new Dictionary<ShapeType, ShapeRenderer> {
-                {ShapeType.Rectangle, new ShapeRenderer(ShapeType.Rectangle)},
-                {ShapeType.Triangle, new ShapeRenderer(ShapeType.Triangle)},
-                {ShapeType.Circle, new ShapeRenderer(ShapeType.Circle)}
-            };
+            shape_renderer = new ShapeRenderer();
 
             if(camera_zoom_enabled)
                 camera.enable_zoom_on_scroll();
@@ -81,8 +77,8 @@ namespace ArcadiaEngine.Graphics
         public static void draw(string sprite_sheet, params SpriteInfo[] sprites) {
             sprite_renderer_list[sprite_sheet].add_sprite(sprites);
         }
-        public static void draw(ShapeType type, bool filled, params ShapeInfo[] shapes) {
-            shape_renderer_list[type].add_shape(filled, shapes);
+        public static void draw(ShapeType type, params ShapeInfo[] shapes) {
+            shape_renderer.add_shape(shapes);
         }
 
         public static void render() {
@@ -95,9 +91,7 @@ namespace ArcadiaEngine.Graphics
                 if(sprite_renderer.sprites.Count > 0)
                     sprite_renderer.draw();
 
-            foreach(ShapeRenderer shape_renderer in shape_renderer_list.Values)
-                if(shape_renderer.count > 0)
-                    shape_renderer.draw();
+            shape_renderer.render();
         }
     }
 }
