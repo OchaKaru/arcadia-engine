@@ -24,7 +24,7 @@ namespace ArcadiaEngine.Common.Geometry {
         }
 
         public static float distance_between(Point p1, Point p2) {
-            return MathF.Sqrt(MathF.Pow(p2.point_position.X - p1.point_position.X, 2) + MathF.Pow(p2.point_position.Y - p1.point_position.Y, 2));
+            return p1.distance_to(p2);
         }
 
 

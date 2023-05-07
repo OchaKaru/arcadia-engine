@@ -3,15 +3,32 @@
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 using ArcadiaEngine.Graphics.Shapes;
+using ArcadiaEngine.Graphics;
 
 namespace ArcadiaEngine.Common.Geometry
 {
     public class Triangle : Shape {
-        public Vector2[] triangle_vertices { get; set; }
+        public Vector2[] triangle_vertices { get; }
 
         public Vector2 triangle_center { 
             get {
                 return (triangle_vertices[0] + triangle_vertices[1] + triangle_vertices[2]) / 3;
+            }
+        }
+
+        public Vector2 vertex_a {
+            set {
+                triangle_vertices[0] = value;
+            }
+        }
+        public Vector2 vertex_b {
+            set { 
+                triangle_vertices[1] = value;
+            }
+        }
+        public Vector2 vertex_c {
+            set {
+                triangle_vertices[2] = value;
             }
         }
 
@@ -22,18 +39,28 @@ namespace ArcadiaEngine.Common.Geometry
             triangle_vertices[2] = vertex3;
         }
 
-        public void draw_fill() {
-
+        public override void draw_fill() {
+            GraphicsEngine.draw(new ShapeInfo(
+                triangle_vertices,
+                shape_scale,
+                shape_color,
+                ShapeType.CircleFill
+            ));
         }
-        public void draw_border() {
-            
+        public override void draw_border() {
+            GraphicsEngine.draw(new ShapeInfo(
+                triangle_vertices,
+                shape_scale,
+                shape_color,
+                ShapeType.CircleFill
+            ));
         }
 
-        public bool intersects(Rectangle other) {
+        public override bool intersects(Rectangle other) {
             if(other.contains(triangle_center))
                 return true;
             for(int i = 0; i < 3; i++) {
-                float slope = (triangle_vertices[i + 1 % 3].Y - triangle_vertices[i].Y) / (triangle_vertices[i + 1 % 3].X - triangle_vertices[i].X);
+                float slope = (triangle_vertices[(i + 1) % 3].Y - triangle_vertices[i].Y) / (triangle_vertices[(i + 1) % 3].X - triangle_vertices[i].X);
 
                 float intersection_one = slope * (other.rectangle_position.X - triangle_vertices[i].X) + triangle_vertices[i].Y;
                 float intersection_two = slope * (other.rectangle_position.X + other.rectangle_size.X - triangle_vertices[i].X) + triangle_vertices[i].Y;
@@ -47,7 +74,7 @@ namespace ArcadiaEngine.Common.Geometry
                     overlap_bottom = (intersection_one < intersection_two) ? intersection_two : intersection_one;
 
                 bool vertex_one_in_overlap = triangle_vertices[i].Y > overlap_top && triangle_vertices[i].Y < overlap_bottom;
-                bool vertex_two_in_overlap = triangle_vertices[i + 1 % 3].Y > overlap_top && triangle_vertices[i + 1 % 3].Y < overlap_bottom;
+                bool vertex_two_in_overlap = triangle_vertices[(i + 1) % 3].Y > overlap_top && triangle_vertices[(i + 1) % 3].Y < overlap_bottom;
 
                 if(vertex_one_in_overlap || vertex_two_in_overlap)
                     return true;
@@ -55,20 +82,20 @@ namespace ArcadiaEngine.Common.Geometry
 
             return false;
         }
-        public bool intersects(Triangle other) {
+        public override bool intersects(Triangle other) {
             if(contains(other.triangle_center) || other.contains(triangle_center))
                 return true;
-            else if(other.contains(triangle_vertices[0]) || other.contains(triangle_vertices[1]) || other.contains(triangle_vertices[2]))
-                return true;
-            else if(contains(other.triangle_vertices[0]) || contains(other.triangle_vertices[1]) || contains(other.triangle_vertices[2]))
-                return true;
+            for(int i = 0; i < 3; i++)
+                for(int j = 0; j < 3; j++)
+                    if(Line.lines_intersect(triangle_vertices[i], triangle_vertices[(i + 1) % 3], other.triangle_vertices[j], other.triangle_vertices[(j + 1) % 3]))
+                        return true;
             return false;
         }
-        public bool intersects(Circle other) {
+        public override bool intersects(Circle other) {
             return other.intersects(this);
         }
 
-        public bool contains(Point p) {
+        public override bool contains(Point p) {
             var sign = (Vector2 p1, Vector2 p2, Vector2 p3) => {
                 return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
             };

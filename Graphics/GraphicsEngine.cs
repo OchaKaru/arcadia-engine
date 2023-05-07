@@ -77,7 +77,7 @@ namespace ArcadiaEngine.Graphics
         public static void draw(string sprite_sheet, params SpriteInfo[] sprites) {
             sprite_renderer_list[sprite_sheet].add_sprite(sprites);
         }
-        public static void draw(ShapeType type, params ShapeInfo[] shapes) {
+        public static void draw(params ShapeInfo[] shapes) {
             shape_renderer.add_shape(shapes);
         }
 
@@ -91,6 +91,7 @@ namespace ArcadiaEngine.Graphics
                 if(sprite_renderer.sprites.Count > 0)
                     sprite_renderer.draw();
 
+            shape_shader.set_matrix("projection", camera.get_projection_matrix());
             shape_renderer.render();
         }
     }
