@@ -15,7 +15,7 @@ namespace ArcadiaEngine.Graphics.Shapes {
             public Vector4 color;
 
             public SentShapeInfo(ShapeInfo shape) {
-                model = Matrix4.CreateScale(shape.scale, shape.scale, 1) * Matrix4.CreateRotationZ(shape.factor);
+                model = Matrix4.CreateScale(shape.scale, shape.scale, 1);
                 color = shape.color;
             }
         };
@@ -56,7 +56,7 @@ namespace ArcadiaEngine.Graphics.Shapes {
         }
 
         protected void update_vertex_buffer(Vector2[] vertices) {
-            GL.BindVertexArray(vertex_array);            
+            GL.BindVertexArray(vertex_array);          
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertex_buffer);
 
             GL.BufferData(BufferTarget.ArrayBuffer, Unsafe.SizeOf<Vector2>() * vertices.Length, vertices, BufferUsageHint.StaticDraw);

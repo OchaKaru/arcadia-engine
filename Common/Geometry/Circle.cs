@@ -2,6 +2,7 @@
 
 using ArcadiaEngine.Graphics;
 using ArcadiaEngine.Graphics.Shapes;
+using System;
 
 namespace ArcadiaEngine.Common.Geometry {
     public class Circle : Shape {
@@ -16,30 +17,49 @@ namespace ArcadiaEngine.Common.Geometry {
         }
 
         public override void draw_fill() {
-            GraphicsEngine.draw(ShapeType.CircleFill, new ShapeInfo(
-                create_vertices(),
-                circle_radius,
+            GraphicsEngine.draw(new ShapeInfo(
+                create_triangels(),
                 shape_scale,
                 shape_color,
                 ShapeType.CircleFill
             ));
         }
         public override void draw_border() {
-            GraphicsEngine.draw(ShapeType.CircleLine, new ShapeInfo(
-                create_vertices(),
-                circle_radius,
+            GraphicsEngine.draw(new ShapeInfo(
+                create_border(),
                 shape_scale,
                 shape_color,
                 ShapeType.CircleLine
             ));
         }
 
-        private Vector2[] create_vertices() {
-            Vector2[] vertices = new Vector2[CIRCLE_DEFINITION];
+        private Vector2[] create_triangels() {
+            Vector2[] vertices = new Vector2[3 * CIRCLE_DEFINITION];
 
             for(int i = 0; i < CIRCLE_DEFINITION; i++) {
-                
+                vertices[i * 3 + 0] = circle_center;
+                vertices[i * 3 + 1] = new Vector2(
+                    circle_center.X + circle_radius * MathF.Cos(2 * i * MathF.PI / CIRCLE_DEFINITION),
+                    circle_center.Y + circle_radius * MathF.Sin(2 * i * MathF.PI / CIRCLE_DEFINITION)
+                );
+                vertices[i * 3 + 2] = new Vector2(
+                    circle_center.X + circle_radius * MathF.Cos(2 * (i + 1) * MathF.PI / CIRCLE_DEFINITION),
+                    circle_center.Y + circle_radius * MathF.Sin(2 * (i + 1) * MathF.PI / CIRCLE_DEFINITION)
+                );
             }
+
+            return vertices;
+        }
+        private Vector2[] create_border() {
+            Vector2[] vertices = new Vector2[CIRCLE_DEFINITION + 1];
+
+            for(int i = 0; i < CIRCLE_DEFINITION + 1; i++)
+                vertices[i] = new Vector2(
+                    circle_center.X + circle_radius * MathF.Cos(2 * i * MathF.PI / CIRCLE_DEFINITION),
+                    circle_center.Y + circle_radius * MathF.Sin(2 * i * MathF.PI / CIRCLE_DEFINITION)
+                );
+
+            return vertices;
         }
 
         public override bool intersects(Circle other) {

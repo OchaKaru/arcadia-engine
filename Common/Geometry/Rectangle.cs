@@ -1,5 +1,6 @@
 ﻿using System;
-
+using ArcadiaEngine.Graphics.Shapes;
+using ArcadiaEngine.Graphics;
 using OpenTK.Mathematics;
 
 namespace ArcadiaEngine.Common.Geometry {
@@ -18,23 +19,42 @@ namespace ArcadiaEngine.Common.Geometry {
             rectangle_size = size;
         }
 
-        public void draw_fill() {
-
+        public override void draw_fill() {
+            GraphicsEngine.draw(new ShapeInfo(
+                create_vertices(),
+                shape_scale,
+                shape_color,
+                ShapeType.CircleFill
+            ));
         }
-        public void draw_border() {
-
+        public override void draw_border() {
+            GraphicsEngine.draw(new ShapeInfo(
+                create_vertices(),
+                shape_scale,
+                shape_color,
+                ShapeType.CircleFill
+            ));
         }
 
-        public bool intersects(Rectangle other) {
+        private Vector2[] create_vertices() {
+            return new Vector2[4] { 
+                rectangle_position,
+                new Vector2(rectangle_position.X + rectangle_size.X, rectangle_position.Y),
+                new Vector2(rectangle_position.X + rectangle_size.X, rectangle_position.Y + rectangle_size.Y),
+                new Vector2(rectangle_position.X, rectangle_position.Y + rectangle_size.Y)
+            };
+        }
+
+        public override bool intersects(Rectangle other) {
             return rectangle_position.X < other.rectangle_position.X + other.rectangle_size.X &&
                 rectangle_position.X + rectangle_size.X > other.rectangle_position.X &&
                 rectangle_position.Y < other.rectangle_position.Y + other.rectangle_size.Y &&
                 rectangle_position.Y + rectangle_size.Y > other.rectangle_position.Y;
         }
-        public bool intersects(Triangle other) {
+        public override bool intersects(Triangle other) {
             return other.intersects(this);
         }
-        public bool intersects(Circle other) {
+        public override bool intersects(Circle other) {
             if(contains(other.circle_center))
                 return true;
             else if(closest_edge_point(other.circle_center).distance_to(other.circle_center) < other.circle_radius)
@@ -42,7 +62,7 @@ namespace ArcadiaEngine.Common.Geometry {
             return false;
         }
 
-        public bool contains(Point p) {
+        public override bool contains(Point p) {
             return p.X >= rectangle_position.X && p.X <= rectangle_position.X + rectangle_size.X &&
                 p.Y >= rectangle_position.Y && p.Y <= rectangle_position.Y + rectangle_size.Y;
         }
