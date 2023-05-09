@@ -10,12 +10,7 @@ namespace ArcadiaEngine.Graphics.Sprites
         protected Vector2 sprite_size;
         protected Vector2 sprite_sheet_dimensions;
 
-        internal SpriteAtlas() { }
         internal SpriteAtlas(string sprite_name, Vector2 sprite_pixel_size, Vector2 sheet_dimensions) {
-            initialize(sprite_name, sprite_pixel_size, sheet_dimensions);
-        }
-
-        protected void initialize(string sprite_name, Vector2 sprite_pixel_size, Vector2 sheet_dimensions) {
             sprite_sheet_name = sprite_name;
 
             sprite_size = sprite_pixel_size;

@@ -6,7 +6,6 @@ using OpenTK.Graphics.OpenGL4;
 using ArcadiaEngine.Common;
 using ArcadiaEngine.Common.Exceptions;
 using ArcadiaEngine.Graphics.Shaders;
-using ArcadiaEngine.Graphics.Shapes;
 using ArcadiaEngine.Graphics.Sprites.Rendering;
 
 namespace ArcadiaEngine.Graphics
@@ -22,9 +21,6 @@ namespace ArcadiaEngine.Graphics
 
         private static Shader? sprite_shader;
         private static Dictionary<string, SpriteRenderer>? sprite_renderer_list;
-
-        private static Shader? shape_shader;
-        private static ShapeRenderer? shape_renderer;
 
         public static void initialize() {
             GL.Enable(EnableCap.Blend);
@@ -42,12 +38,6 @@ namespace ArcadiaEngine.Graphics
                 @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\sprite-rendering\sprite.frag"
             );
             sprite_renderer_list = SpriteLoader.load_sprites();
-
-            shape_shader = new DisplayShader(
-                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\shape.vert",
-                @"C:\Users\Plutarco\Documents\Documents\Projects\game-engine\arcadia-engine\Graphics\Shaders\shape-rendering\shape.frag"
-            );
-            shape_renderer = new ShapeRenderer();
 
             if(camera_zoom_enabled)
                 camera.enable_zoom_on_scroll();
@@ -77,9 +67,6 @@ namespace ArcadiaEngine.Graphics
         public static void draw(string sprite_sheet, params SpriteInfo[] sprites) {
             sprite_renderer_list[sprite_sheet].add_sprite(sprites);
         }
-        public static void draw(params ShapeInfo[] shapes) {
-            shape_renderer.add_shape(shapes);
-        }
 
         public static void render() {
             sprite_shader.use();
@@ -90,9 +77,6 @@ namespace ArcadiaEngine.Graphics
             foreach(SpriteRenderer sprite_renderer in sprite_renderer_list.Values)
                 if(sprite_renderer.sprites.Count > 0)
                     sprite_renderer.draw();
-
-            shape_shader.set_matrix("projection", camera.get_projection_matrix());
-            shape_renderer.render();
         }
     }
 }
