@@ -81,7 +81,7 @@ namespace ArcadiaEngine.Graphics.Animations {
                 Matrix4.CreateScale(entity.entity_scale.X, entity.entity_scale.Y, 1) *
                 Matrix4.CreateScale(sprite_size.X, sprite_size.Y, 1) *
                 Matrix4.CreateRotationZ(entity.entity_rotation) *
-                Matrix4.CreateTranslation(entity.entity_position.X, entity.entity_position.Y, 0),
+                Matrix4.CreateTranslation(entity.body.current_position.X, entity.body.current_position.Y, 0),
                 entity.entity_color,
                 //entity.draw_layer,
                 current_frame,
